@@ -1,6 +1,5 @@
 var channels = ['ESL_SC2', 'OgamingSC2', 'cretetion', 'freecodecamp', 'storbeck', 'habathcx', 'comster404', 'RobotCaleb', 'brunofin', 'noobs2ninjas'],
     main = document.getElementById('main'),
-    list = document.getElementsByName('div'),
     userAll = document.getElementById('all'),
     userOnline = document.getElementById("online"),
     userOffline = document.getElementById('offline');
@@ -18,18 +17,32 @@ function getInfo(a) {
       name = document.createElement('h3'),
       game = document.createElement('h4'),
       description = document.createElement('h5');
+      
+  userAll.classList.remove('none');
+  userAll.classList.add('active');
+  userOnline.classList.remove('active');
+  userOnline.classList.add('none');
+  userOffline.classList.remove('active');
+  userOffline.classList.add('none');
+  
+  while(main.firstChild) {
+    main.removeChild(main.firstChild);
+  }
     
   $.getJSON('https://api.twitch.tv/kraken/streams/' + a, function(data){
     
     console.log(data);
     if (data.stream !== null) {
       
-      image.setAttribute('src', data.stream.channel.logo);
-      name.textContent = data.stream.channel.display_name;
+      image.src = data.stream.channel.logo;
+      name.textContent = data.stream.channel.display_name + ' : ';
       game.textContent = data.stream.game;
-      description.textContent = data.stream.channel.status;
+      description.textContent = ' - ' + data.stream.channel.status;
       
-      div.innerHtml = image + name + ' : ' + game + ' - ' + description;
+      div.appendChild(image);
+      div.appendChild(name);
+      div.appendChild(game);
+      div.appendChild(description);
       div.classList.add("online");
       
       main.insertBefore(div, main.firstChild);
@@ -40,7 +53,7 @@ function getInfo(a) {
       description = ' - OFFLINE';
       
       div.textContent = name + description;
-      div.classList.add("offline");
+      div.classList.add('offline');
       
       main.appendChild(div);
       
@@ -64,6 +77,12 @@ function init() {
 
 function getLive() {
   
+  var list = document.getElementsByName('div');
+  
+  while(main.firstChild) {
+    main.removeChild(main.firstChild);
+  }
+  
   userAll.classList.remove('active');
   userAll.classList.add('none');
   userOnline.classList.remove('none');
@@ -73,8 +92,7 @@ function getLive() {
   
   for (var i = 0; i < list.length; i++) {
     
-    if (list[i].getAttribute === 'online') {
-      
+    if (list[i].classList.indexOf('online')) {
       
       main.appendChild(div);
       
@@ -86,6 +104,12 @@ function getLive() {
 
 function getOffline() {
   
+  var list = document.getElementsByName('div');
+  
+  while(main.firstChild) {
+    main.removeChild(main.firstChild);
+  }
+  
   userAll.classList.remove('active');
   userAll.classList.add('none');
   userOnline.classList.remove('active');
@@ -95,8 +119,7 @@ function getOffline() {
   
   for (var i = 0; i < list.length; i++) {
     
-    if (list[i].getAttribute === 'offline') {
-      
+    if (list[i].classList.indexOf('offline')) {
       
       main.appendChild(div);
       

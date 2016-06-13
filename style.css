@@ -2,6 +2,7 @@
   margin:0;
   padding:0;
   text-align:center;
+  box-sizing:border-box;
 }
 
 html {
@@ -62,25 +63,27 @@ header ul li a:hover {
 
 section {
   background-color:#07889b;
-  padding:20px;
+  padding:20px 20px 0 20px;
   border:1px solid #000;
   border-bottom-right-radius:20px;
   border-bottom-left-radius:20px;
 }
 
 section div {
-  width:80%;
+  width:100%;
   height:60px;
   margin:0 auto 20px auto;
   border-radius:10px;
   line-height:60px;
 }
 h3 {
- font-size:36px;
+ font-size:18px;
+ display:inline;
 }
 
 h4, h5 {
-  font-size:24px;
+  font-size:14px;
+  display:inline;
 }
 
 .online {
@@ -95,4 +98,6 @@ section div img {
   width:50px;
   height:50px;
   border-radius:50%;
+  display:inline-block;
+  margin-top:5px;
 }
