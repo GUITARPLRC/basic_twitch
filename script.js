@@ -1,5 +1,8 @@
-var channels = ['ESL_SC2', 'OgamingSC2', 'cretetion', 'freecodecamp', 'storbeck', 'habathcx', 'comster404', 'RobotCaleb', 'brunofin', 'noobs2ninjas'],
-    main = document.getElementById('main');
+var channels = ['ESL_SC2', 'OgamingSC2', 'cretetion', 'freecodecamp', 'storbeck', 'habathcx',
+                'comster404', 'RobotCaleb', 'brunofin', 'noobs2ninjas'],
+                content = document.getElementById('content');
+
+
 
 
 function getInfo(a) {
@@ -11,13 +14,12 @@ function getInfo(a) {
       game = document.createElement('h4'),
       description = document.createElement('h5');
   
-  while(main.firstChild) {
-    main.removeChild(main.firstChild);
-  }
+  while (content.firstChild) {
+    content.removeChild(content.firstChild);
+  }			//if there is content, remove all before adding / clear the board
     
-  $.getJSON('https://api.twitch.tv/kraken/streams/' + a, function (data){
+  $.getJSON('https://api.twitch.tv/kraken/streams/' + a).done( function (data){
     
-    console.log(data);
     if (data.stream !== null) {
       
       anchor.setAttribute('href', data.stream.channel.url);
@@ -34,7 +36,7 @@ function getInfo(a) {
       anchor.appendChild(div);
       
       
-      main.insertBefore(anchor, main.firstChild);
+      content.insertBefore(anchor, content.firstChild);
       
     } else {
       
@@ -44,12 +46,12 @@ function getInfo(a) {
       div.textContent = name + description;
       div.classList.add('offline');
       
-      main.appendChild(div);
+      content.appendChild(div);
       
     }
     
   
-  }).fail( function() { //if fails, response returns error locating profile = closed account
+  }).fail( function() {				//if fails, response returns error locating profile = closed account
     
     name = a;
     description = ' - ACCOUNT CLOSED';
@@ -57,20 +59,21 @@ function getInfo(a) {
     div.textContent = name + description;
     div.classList.add('offline');
     
-    main.appendChild(div);
+    content.appendChild(div);
     
-  }) //end getJSON
+  }); //end getJSON
 } // end getInfo
 
 function init() {
+	 var channel;
 
   for (var i = 0; i < channels.length; i++) {
     
-      var channel = channels[i];
+      channel = channels[i];
 
   getInfo(channel);
   
   }
 } // end init
 
-init();
+document.load = init();
