@@ -1,9 +1,5 @@
-var channels = ['ESL_SC2', 'OgamingSC2', 'cretetion', 'freecodecamp', 'storbeck', 'habathcx',
-                'comster404', 'RobotCaleb', 'brunofin', 'noobs2ninjas'],
-                content = document.getElementById('content');
-
-
-
+var channels = ['ESL_SC2', 'OgamingSC2', 'cretetion', 'freecodecamp', 'storbeck', 'habathcx', 'comster404', 'RobotCaleb', 'brunofin', 'noobs2ninjas'],
+		main = document.getElementById('main');
 
 function getInfo(a) {
   
@@ -12,68 +8,78 @@ function getInfo(a) {
       image = document.createElement('img'),
       name = document.createElement('h3'),
       game = document.createElement('h4'),
-      description = document.createElement('h5');
+      description = document.createElement('p');
+	
+	anchor.setAttribute('target', '_blank')
   
-  while (content.firstChild) {
-    content.removeChild(content.firstChild);
-  }			//if there is content, remove all before adding / clear the board
-    
-  $.getJSON('https://api.twitch.tv/kraken/streams/' + a).done( function (data){
-    
-    if (data.stream !== null) {
-      
-      anchor.setAttribute('href', data.stream.channel.url);
-      image.src = data.stream.channel.logo;
-      name.textContent = data.stream.channel.display_name + ' : ';
-      game.textContent = data.stream.game;
-      description.textContent = ' - ' + data.stream.channel.status;
-      
-      div.appendChild(image);
-      div.appendChild(name);
-      div.appendChild(game);
-      div.appendChild(description);
-      div.classList.add("online");
-      anchor.appendChild(div);
-      
-      
-      content.insertBefore(anchor, content.firstChild);
-      
-    } else {
-      
-      name = a;
-      description = ' - OFFLINE';
-      
-      div.textContent = name + description;
-      div.classList.add('offline');
-      
-      content.appendChild(div);
-      
-    }
-    
-  
-  }).fail( function() {				//if fails, response returns error locating profile = closed account
-    
-    name = a;
-    description = ' - ACCOUNT CLOSED';
-    
-    div.textContent = name + description;
-    div.classList.add('offline');
-    
-    content.appendChild(div);
-    
-  }); //end getJSON
-} // end getInfo
+  while(main.firstChild) {
+    main.removeChild(main.firstChild);
+  }
+	
+   
+  var request = $.ajax({
+    method: 'GET',
+    url: 'https://api.twitch.tv/kraken/streams/' + a,
+		dataType: 'json',
+    headers: {
+       'Client-ID': '82g0c4vl8dda4q11grwws763oxlpdk0'
+     }
+	});
+	request.done(function(data) {
+     
+			if (data.stream !== null) {
 
+				anchor.setAttribute('href', data.stream.channel.url);
+				image.src = data.stream.channel.logo;
+				name.textContent = data.stream.channel.display_name;
+				game.textContent = data.stream.game;
+				description.textContent = data.stream.channel.status;
+
+				div.appendChild(image);
+				div.appendChild(name);
+				div.appendChild(game);
+				div.appendChild(description);
+				div.classList.add('online');
+				anchor.appendChild(div);
+
+				main.insertBefore(anchor, main.firstChild);
+
+			} else {
+
+				name.textContent = a;
+				description.textContent = 'OFFLINE';
+
+				div.appendChild(name); 
+				div.appendChild(description);
+				div.classList.add('offline');
+
+				main.appendChild(div);
+
+			}
+    
+  	}); //end success/done
+		request.fail(function() { //if fail locating profile = closed account
+    
+        name.textContent = a;
+        description.textContent = 'ACCOUNT CLOSED';
+
+        div.appendChild(name);
+				div.appendChild(description);
+        div.classList.add('offline');
+
+        main.appendChild(div);
+      
+    });// end fail
+} // end getInfo
+	
 function init() {
-	 var channel;
 
   for (var i = 0; i < channels.length; i++) {
     
-      channel = channels[i];
-
-  getInfo(channel);
+    var channel = channels[i];
+  	getInfo(channel);
   
   }
 } // end init
 
-document.load = init();
+init();
